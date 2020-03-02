@@ -4,3 +4,7 @@
 .gradle/
 
 build/
+
+HELP.md
+
+.kotlintest/
