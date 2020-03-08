@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class GetLanguage(private val languageDao: LanguageDao) {
-    
-    fun getById(id: Long): Language? {
-        return languageDao.getById(id) ?: throw NotFoundException("No language for id: $id")
+
+    fun getById(id: Long): Language {
+        return languageDao.getById(id)?: throw NotFoundException("No language for id: $id")
     }
 
 }
