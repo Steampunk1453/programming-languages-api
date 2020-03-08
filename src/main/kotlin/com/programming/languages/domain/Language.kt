@@ -1,7 +1,7 @@
 package com.programming.languages.domain
 
 data class Language(
-        val id: Long,
+        val id: Long? = null,
         val name: String,
         val designed: String?,
         val year: Int?,
