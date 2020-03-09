@@ -1,5 +1,5 @@
 package com.programming.languages.repository
 
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface LanguageRepository : CrudRepository<LanguageEntity, Long>
+interface LanguageRepository : JpaRepository<LanguageEntity, Long>
