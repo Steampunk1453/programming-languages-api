@@ -2,7 +2,6 @@ package com.programming.languages.usecase
 
 import com.programming.languages.given.GivenLanguage
 import com.programming.languages.repository.LanguageDao
-import com.programming.languages.repository.LanguageRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -11,7 +10,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockKExtension::class)
 internal class CreateLanguageTest : GivenLanguage {
@@ -24,7 +22,7 @@ internal class CreateLanguageTest : GivenLanguage {
     @Test
     fun `should create a new language`() {
         val language = LANGUAGE
-        every { dao.create(any()) } returns language
+        every { dao.save(any()) } returns language
 
         val result = useCase.invoke(LANGUAGE)
 
