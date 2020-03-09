@@ -12,4 +12,8 @@ class GetLanguage(private val languageDao: LanguageDao) {
         return languageDao.getById(id)?: throw NotFoundException("No language for id: $id")
     }
 
+    fun getAll(): List<Language> {
+        return languageDao.getAll()?: throw NotFoundException("No languages")
+    }
+
 }

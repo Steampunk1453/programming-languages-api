@@ -32,18 +32,36 @@ internal class GetLanguageTest : GivenLanguage {
         val result = useCase.getById(1L)
 
         assertThat(result, Matchers.`is`(Matchers.not(Matchers.nullValue())))
-        assertThat(result?.id, Matchers.`is`(language.id))
-        assertThat(result?.name, Matchers.`is`(language.name))
-        assertThat(result?.designed, Matchers.`is`(language.designed))
-        assertThat(result?.year, Matchers.`is`(language.year))
-        assertThat(result?.version, Matchers.`is`(language.version))
-        assertThat(result?.web, Matchers.`is`(language.web))
+        assertThat(result.id, Matchers.`is`(language.id))
+        assertThat(result.name, Matchers.`is`(language.name))
+        assertThat(result.designed, Matchers.`is`(language.designed))
+        assertThat(result.year, Matchers.`is`(language.year))
+        assertThat(result.version, Matchers.`is`(language.version))
+        assertThat(result.web, Matchers.`is`(language.web))
     }
 
     @Test
     fun `should throw NotFoundException when language not found`() {
         every { dao.getById(any()) } returns null
+
         assertThrows<NotFoundException> { useCase.getById(1L) }
+    }
+
+    @Test
+    fun `should get all languages`() {
+        val language = LANGUAGE
+        val languages = listOf(language)
+        every { dao.getAll() } returns languages
+
+        val result = useCase.getAll()
+
+        assertThat(result, Matchers.`is`(Matchers.not(Matchers.nullValue())))
+        assertThat(result[0].id, Matchers.`is`(languages[0].id))
+        assertThat(result[0].name, Matchers.`is`(languages[0].name))
+        assertThat(result[0].designed, Matchers.`is`(languages[0].designed))
+        assertThat(result[0].year, Matchers.`is`(languages[0].year))
+        assertThat(result[0].version, Matchers.`is`(languages[0].version))
+        assertThat(result[0].web, Matchers.`is`(languages[0].web))
     }
 
 }
