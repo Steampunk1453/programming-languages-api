@@ -13,4 +13,6 @@ interface GivenLanguage {
                 version = "1.3.61",
                 web = "https://kotlinlang.org"
         )
+    val LANGUAGE_ID
+     get() = 2
 }
