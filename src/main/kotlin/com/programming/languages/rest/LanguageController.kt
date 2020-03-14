@@ -33,7 +33,7 @@ class LanguageController(
     }
 
     @PutMapping("/language{languageId}")
-    fun updateLanguage(@RequestBody languageDto: LanguageDto,  @PathVariable languageId: Long): ResponseEntity<Unit> {
+    fun updateLanguage(@RequestBody languageDto: LanguageDto, @PathVariable languageId: Long): ResponseEntity<Unit> {
         updateLanguage(languageDto.toDomain(), languageId)
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
