@@ -27,7 +27,7 @@ internal class UpdateLanguageTest : GivenLanguage {
         every { dao.getById(any()) } returns language
         every { dao.save(any()) } returns language
 
-        val result = useCase.invoke(LANGUAGE)
+        val result = useCase.invoke(language, 1)
 
         MatcherAssert.assertThat(result, Matchers.`is`(Matchers.not(Matchers.nullValue())))
         MatcherAssert.assertThat(result.id, Matchers.`is`(language.id))
@@ -43,7 +43,7 @@ internal class UpdateLanguageTest : GivenLanguage {
         val language = LANGUAGE
         every { dao.getById(any()) } returns null
 
-        assertThrows<NotFoundException> { useCase.invoke(language) }
+        assertThrows<NotFoundException> { useCase.invoke(language, 1) }
     }
 
 }
