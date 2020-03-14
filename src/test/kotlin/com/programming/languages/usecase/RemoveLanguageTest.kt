@@ -28,7 +28,7 @@ internal class RemoveLanguageTest : GivenLanguage {
         every { dao.getById(any()) } returns language
         every { dao.delete(any()) } just Runs
 
-        val result = useCase.invoke(1)
+        useCase.invoke(1)
 
         verify(atLeast = 1) {  dao.delete(1) }
     }
