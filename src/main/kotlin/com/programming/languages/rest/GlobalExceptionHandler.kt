@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 @RestController
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
+
     @ExceptionHandler(NotFoundException::class)
     fun notFound(ex: NotFoundException) =
         ResponseEntity(LanguageError(LanguageErrorCode.NOT_FOUND, ex.message), HttpStatus.NOT_FOUND)
@@ -19,4 +20,5 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(AlreadyRegisteredException::class)
     fun alreadyExists(ex: AlreadyRegisteredException) =
         ResponseEntity(LanguageError(LanguageErrorCode.ALREADY_REGISTERED, ex.message), HttpStatus.CONFLICT)
+    
 }
