@@ -29,11 +29,6 @@ class LanguageControllerIT(
         @Autowired  private val dao: LanguageDao
 ) : GivenLanguage{
 
-    @BeforeEach
-    fun beforeTest() {
-        repository.deleteAll()
-    }
-
     @Test
     @DirtiesContext
     fun `POST should create a language`() {
@@ -53,6 +48,7 @@ class LanguageControllerIT(
     @DirtiesContext
     fun `POST should returns 415 if the json body isn't expected`() {
         val entity = HttpEntity("")
+
         val response = this.restTemplate.exchange(
                 "/language",
                 HttpMethod.POST,
