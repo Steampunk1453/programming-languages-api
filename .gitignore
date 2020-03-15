@@ -4,3 +4,9 @@
 .gradle/
 
 build/
+
+HELP.md
+
+.kotlintest/
+
+local.properties

@@ -30,11 +30,20 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation ("io.springfox:springfox-swagger2:2.9.2")
+	implementation ("io.springfox:springfox-swagger-ui:2.9.2")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.h2database:h2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude(group = "org.junit", module = "junit")
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+	testImplementation("io.kotlintest:kotlintest-runner-junit5:3.3.0-RC3")
+	testImplementation("io.kotlintest:kotlintest-extensions-spring:3.3.0-RC3")
+	testImplementation("com.ninja-squad:springmockk:1.1.3")
+	testImplementation ("org.springframework.security:spring-security-test:5.1.4.RELEASE")
 }
 
 tasks.withType<Test> {
