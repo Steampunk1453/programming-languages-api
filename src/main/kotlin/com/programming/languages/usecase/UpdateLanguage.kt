@@ -10,7 +10,7 @@ class UpdateLanguage(private val languageDao: LanguageDao) {
 
     operator fun invoke(language: Language, id: Long): Language {
         languageDao.getById(id)?: throw NotFoundException("No language for id: $id")
-        language.id=id
+        language.id = id
         return languageDao.save(language)
     }
 
