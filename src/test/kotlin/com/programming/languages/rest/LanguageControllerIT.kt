@@ -3,13 +3,9 @@ package com.programming.languages.rest
 import com.programming.languages.domain.Language
 import com.programming.languages.given.GivenLanguage
 import com.programming.languages.repository.LanguageDao
-import com.programming.languages.repository.LanguageRepository
 import com.programming.languages.usecase.exception.NotFoundException
-import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNot
 import io.kotlintest.shouldNotBe
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +21,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LanguageControllerIT(
         @Autowired  private val restTemplate: TestRestTemplate,
-        @Autowired  private val repository: LanguageRepository,
         @Autowired  private val dao: LanguageDao
 ) : GivenLanguage{
 
@@ -34,7 +29,7 @@ class LanguageControllerIT(
     fun `POST should create a language`() {
         val language = LANGUAGE
 
-        val response = this.restTemplate.postForEntity(
+        val response = withSession().postForEntity(
                 "/language",
                 language.toDto(),
                 String::class.java,
@@ -49,7 +44,7 @@ class LanguageControllerIT(
     fun `POST should returns 415 if the json body isn't expected`() {
         val entity = HttpEntity("")
 
-        val response = this.restTemplate.exchange(
+        val response = withSession().exchange(
                 "/language",
                 HttpMethod.POST,
                 entity,
@@ -66,8 +61,8 @@ class LanguageControllerIT(
         val language = LANGUAGE
 
         val response = withSession().getForEntity(
-                "/language/$languageId",
-                LanguageDto::class.java
+                "/language/id/$languageId",
+                LanguageResponse::class.java
         )
 
         response.statusCode shouldBe HttpStatus.OK
@@ -80,9 +75,44 @@ class LanguageControllerIT(
 
     @Test
     @DirtiesContext
-    fun `GET should returns 404 if there isn't language`() {
+    fun `GET should returns 404 if there isn't language search by id`() {
         val response = withSession().getForEntity(
-                "/language/$LANGUAGE_ID",
+                "/language/id/$LANGUAGE_ID",
+                NotFoundException::class.java
+        )
+
+        response.statusCode shouldBe HttpStatus.NOT_FOUND
+    }
+
+    @Test
+    @DirtiesContext
+    fun `GET should get a language by name`() {
+        val languageName = LANGUAGE.name
+        val language = LANGUAGE
+
+        val response = withSession().getForEntity(
+                "/language/name/$languageName",
+                LanguageResponse::class.java
+        )
+
+        response.statusCode shouldBe HttpStatus.OK
+        response.body?.designed shouldBe language.designed
+        response.body?.name shouldBe language.name
+        response.body?.version shouldBe language.version
+        response.body?.web shouldBe language.web
+        response.body?.year shouldBe language.year
+        response.body?.total shouldNotBe null
+        response.body?.stars shouldNotBe null
+        response.body?.forks shouldNotBe null
+        response.body?.watches shouldNotBe null
+        response.body?.openIssues shouldNotBe null
+    }
+
+    @Test
+    @DirtiesContext
+    fun `GET should returns 404 if there isn't language search by name`() {
+        val response = withSession().getForEntity(
+                "/language/name/$LANGUAGE_NAME",
                 NotFoundException::class.java
         )
 
