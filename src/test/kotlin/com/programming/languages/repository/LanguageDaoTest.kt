@@ -57,6 +57,25 @@ class LanguageDaoTest(
 
     @Test
     @DirtiesContext
+    fun `should get language by name`() {
+        val language = LANGUAGE
+        val name = "Kotlin"
+        save(language)
+
+        val result = repository.findByName(name)
+
+        result shouldNotBe {null}
+        result.get() shouldNotBe {null}
+        result.get().id shouldBe language.id
+        result.get().name shouldBe language.name
+        result.get().designed shouldBe language.designed
+        result.get().year shouldBe language.year
+        result.get().version shouldBe language.version
+        result.get().web shouldBe language.web
+    }
+
+    @Test
+    @DirtiesContext
     fun `should get all languages`() {
         val language = LANGUAGE
         save(language)
