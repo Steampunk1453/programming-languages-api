@@ -12,7 +12,7 @@ data class LanguageResponse(
         val total: Int?,
         val stars: Int?,
         val forks: Int?,
-        val watches: Int?,
+        val watchers: Int?,
         val openIssues: Int?
 )
 
