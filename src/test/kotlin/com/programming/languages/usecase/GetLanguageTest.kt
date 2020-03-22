@@ -9,8 +9,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -27,7 +25,9 @@ internal class GetLanguageTest : GivenLanguage {
     @Test
     fun `should get a language found by id`() {
         val language = LANGUAGE
+        val languageData = LANGUAGE_DATA
         every { dao.getById(any()) } returns language
+        every { dao.getByNameFromGithub(any()) } returns languageData
 
         val result = useCase.getById(1L)
 
@@ -38,20 +38,58 @@ internal class GetLanguageTest : GivenLanguage {
         assertThat(result.year, Matchers.`is`(language.year))
         assertThat(result.version, Matchers.`is`(language.version))
         assertThat(result.web, Matchers.`is`(language.web))
+        assertThat(result.total, Matchers.`is`(language.total))
+        assertThat(result.stars, Matchers.`is`(language.stars))
+        assertThat(result.forks, Matchers.`is`(language.forks))
+        assertThat(result.watchers, Matchers.`is`(language.watchers))
+        assertThat(result.openIssues, Matchers.`is`(language.openIssues))
     }
 
     @Test
-    fun `should throw NotFoundException when language not found`() {
+    fun `should throw NotFoundException when language not found by id`() {
         every { dao.getById(any()) } returns null
 
         assertThrows<NotFoundException> { useCase.getById(1L) }
     }
 
     @Test
+    fun `should get a language found by name`() {
+        val language = LANGUAGE
+        val languageData = LANGUAGE_DATA
+        every { dao.getByName(any()) } returns language
+        every { dao.getByNameFromGithub(any()) } returns languageData
+
+        val result = useCase.getByName("name")
+
+        assertThat(result, Matchers.`is`(Matchers.not(Matchers.nullValue())))
+        assertThat(result.id, Matchers.`is`(language.id))
+        assertThat(result.name, Matchers.`is`(language.name))
+        assertThat(result.designed, Matchers.`is`(language.designed))
+        assertThat(result.year, Matchers.`is`(language.year))
+        assertThat(result.version, Matchers.`is`(language.version))
+        assertThat(result.web, Matchers.`is`(language.web))
+        assertThat(result.total, Matchers.`is`(language.total))
+        assertThat(result.stars, Matchers.`is`(language.stars))
+        assertThat(result.forks, Matchers.`is`(language.forks))
+        assertThat(result.watchers, Matchers.`is`(language.watchers))
+        assertThat(result.openIssues, Matchers.`is`(language.openIssues))
+    }
+
+    @Test
+    fun `should throw NotFoundException when language not found by name`() {
+        every { dao.getByName(any()) } returns null
+        every { dao.getByNameFromGithub(any()) } returns null
+
+        assertThrows<NotFoundException> { useCase.getByName("name") }
+    }
+
+    @Test
     fun `should get all languages`() {
         val language = LANGUAGE
         val languages = listOf(language)
+        val languageData = LANGUAGE_DATA
         every { dao.getAll() } returns languages
+        every { dao.getByNameFromGithub(any()) } returns languageData
 
         val result = useCase.getAll()
 
@@ -62,6 +100,11 @@ internal class GetLanguageTest : GivenLanguage {
         assertThat(result[0].year, Matchers.`is`(languages[0].year))
         assertThat(result[0].version, Matchers.`is`(languages[0].version))
         assertThat(result[0].web, Matchers.`is`(languages[0].web))
+        assertThat(result[0].total, Matchers.`is`(language.total))
+        assertThat(result[0].stars, Matchers.`is`(language.stars))
+        assertThat(result[0].forks, Matchers.`is`(language.forks))
+        assertThat(result[0].watchers, Matchers.`is`(language.watchers))
+        assertThat(result[0].openIssues, Matchers.`is`(language.openIssues))
     }
 
 }

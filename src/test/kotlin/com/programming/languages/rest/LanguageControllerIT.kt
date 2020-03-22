@@ -3,13 +3,9 @@ package com.programming.languages.rest
 import com.programming.languages.domain.Language
 import com.programming.languages.given.GivenLanguage
 import com.programming.languages.repository.LanguageDao
-import com.programming.languages.repository.LanguageRepository
 import com.programming.languages.usecase.exception.NotFoundException
-import io.kotlintest.matchers.types.shouldNotBeNull
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNot
 import io.kotlintest.shouldNotBe
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +21,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LanguageControllerIT(
         @Autowired  private val restTemplate: TestRestTemplate,
-        @Autowired  private val repository: LanguageRepository,
         @Autowired  private val dao: LanguageDao
 ) : GivenLanguage{
 
@@ -34,7 +29,7 @@ class LanguageControllerIT(
     fun `POST should create a language`() {
         val language = LANGUAGE
 
-        val response = this.restTemplate.postForEntity(
+        val response = restTemplate.postForEntity(
                 "/language",
                 language.toDto(),
                 String::class.java,
@@ -46,10 +41,26 @@ class LanguageControllerIT(
 
     @Test
     @DirtiesContext
+    fun `POST should returns 409 if the language is in DB`() {
+        val language = LANGUAGE
+        create(language)
+
+        val response = restTemplate.postForEntity(
+                "/language",
+                language.toDto(),
+                String::class.java,
+                emptyMap<String, String>()
+        )
+
+        response.statusCode shouldBe HttpStatus.CONFLICT
+    }
+
+    @Test
+    @DirtiesContext
     fun `POST should returns 415 if the json body isn't expected`() {
         val entity = HttpEntity("")
 
-        val response = this.restTemplate.exchange(
+        val response = restTemplate.exchange(
                 "/language",
                 HttpMethod.POST,
                 entity,
@@ -64,10 +75,11 @@ class LanguageControllerIT(
     fun `GET should get a language by id`() {
         val languageId = LANGUAGE.id
         val language = LANGUAGE
+        create(language)
 
-        val response = withSession().getForEntity(
-                "/language/$languageId",
-                LanguageDto::class.java
+        val response = restTemplate.getForEntity(
+                "/language/id/$languageId",
+                LanguageResponse::class.java
         )
 
         response.statusCode shouldBe HttpStatus.OK
@@ -80,9 +92,49 @@ class LanguageControllerIT(
 
     @Test
     @DirtiesContext
-    fun `GET should returns 404 if there isn't language`() {
-        val response = withSession().getForEntity(
-                "/language/$LANGUAGE_ID",
+    fun `GET should returns 404 if there isn't language search by id`() {
+        create(LANGUAGE)
+
+        val response = restTemplate.getForEntity(
+                "/language/id/$LANGUAGE_ID",
+                NotFoundException::class.java
+        )
+
+        response.statusCode shouldBe HttpStatus.NOT_FOUND
+    }
+
+    @Test
+    @DirtiesContext
+    fun `GET should get a language by name`() {
+        val languageName = LANGUAGE.name
+        val language = LANGUAGE
+        create(language)
+
+        val response = restTemplate.getForEntity(
+                "/language/name/$languageName",
+                LanguageResponse::class.java
+        )
+
+        response.statusCode shouldBe HttpStatus.OK
+        response.body?.designed shouldBe language.designed
+        response.body?.name shouldBe language.name
+        response.body?.version shouldBe language.version
+        response.body?.web shouldBe language.web
+        response.body?.year shouldBe language.year
+        response.body?.total shouldNotBe null
+        response.body?.stars shouldNotBe null
+        response.body?.forks shouldNotBe null
+        response.body?.watchers shouldNotBe null
+        response.body?.openIssues shouldNotBe null
+    }
+
+    @Test
+    @DirtiesContext
+    fun `GET should returns 404 if there isn't language search by name`() {
+        create(LANGUAGE)
+
+        val response = restTemplate.getForEntity(
+                "/language/name/$LANGUAGE_NAME",
                 NotFoundException::class.java
         )
 
@@ -93,8 +145,9 @@ class LanguageControllerIT(
     @DirtiesContext
     fun `GET should get all languages`() {
         val language = LANGUAGE
+        create(language)
 
-        val response = withSession().getForEntity(
+        val response = restTemplate.getForEntity(
                 "/language/",
                 LanguageList::class.java
         )
@@ -105,6 +158,11 @@ class LanguageControllerIT(
         response.body?.get(0)?.version shouldBe language.version
         response.body?.get(0)?.web shouldBe language.web
         response.body?.get(0)?.year shouldBe language.year
+        response.body?.get(0)?.total shouldNotBe null
+        response.body?.get(0)?.stars shouldNotBe null
+        response.body?.get(0)?.forks shouldNotBe null
+        response.body?.get(0)?.watchers shouldNotBe null
+        response.body?.get(0)?.openIssues shouldNotBe null
     }
 
     @Test
@@ -113,11 +171,11 @@ class LanguageControllerIT(
         val language = LANGUAGE
         val languageId = LANGUAGE.id
         val entity = HttpEntity(language.toDto())
-
         val param = mutableMapOf<String, String>()
         param["languageId"] = languageId.toString()
+        create(language)
 
-        val response = withSession().exchange(
+        val response = restTemplate.exchange(
                 "/language{languageId}",
                 HttpMethod.PUT,
                 entity,
@@ -132,8 +190,9 @@ class LanguageControllerIT(
     @DirtiesContext
     fun `DELETE should delete a language by id`() {
         val languageId = LANGUAGE.id
+        create(LANGUAGE)
 
-        val response = withSession().delete(
+        val response = restTemplate.delete(
                 "/language/$languageId"
         )
 
@@ -142,11 +201,7 @@ class LanguageControllerIT(
 
     private class LanguageList : MutableList<Language> by ArrayList()
 
-    private fun withSession(): TestRestTemplate {
-        create(LANGUAGE)
-        return restTemplate
-    }
-
     private fun create(language: Language) = dao.save(language)
+
 }
 

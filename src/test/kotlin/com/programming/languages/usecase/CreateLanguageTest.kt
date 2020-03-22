@@ -2,6 +2,7 @@ package com.programming.languages.usecase
 
 import com.programming.languages.given.GivenLanguage
 import com.programming.languages.repository.LanguageDao
+import com.programming.languages.usecase.exception.AlreadyRegisteredException
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -9,6 +10,7 @@ import io.mockk.junit5.MockKExtension
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
@@ -22,16 +24,28 @@ internal class CreateLanguageTest : GivenLanguage {
     @Test
     fun `should create a new language`() {
         val language = LANGUAGE
-        every { dao.save(any()) } returns language
+        val newLanguage = NEW_LANGUAGE
+        every { dao.getByName(any()) } returns language
+        every { dao.save(any()) } returns newLanguage
 
-        val result = useCase.invoke(LANGUAGE)
+        val result = useCase.invoke(NEW_LANGUAGE)
 
         assertThat(result, `is`(not(nullValue())))
-        assertThat(result.id, `is`(language.id))
-        assertThat(result.name, `is`(language.name))
-        assertThat(result.designed, `is`(language.designed))
-        assertThat(result.year, `is`(language.year))
-        assertThat(result.version, `is`(language.version))
-        assertThat(result.web, `is`(language.web))
+        assertThat(result?.id, `is`(newLanguage.id))
+        assertThat(result?.name, `is`(newLanguage.name))
+        assertThat(result?.designed, `is`(newLanguage.designed))
+        assertThat(result?.year, `is`(newLanguage.year))
+        assertThat(result?.version, `is`(newLanguage.version))
+        assertThat(result?.web, `is`(newLanguage.web))
     }
+
+    @Test
+    fun `should throw AlreadyRegisteredException when create a new language`() {
+        val language = LANGUAGE
+        every { dao.getByName(any()) } returns language
+        every { dao.save(any()) } returns language
+
+        assertThrows<AlreadyRegisteredException> { useCase.invoke(LANGUAGE) }
+    }
+
 }

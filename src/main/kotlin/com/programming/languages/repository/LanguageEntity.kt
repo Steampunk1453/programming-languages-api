@@ -8,15 +8,15 @@ import javax.persistence.*
 data class LanguageEntity(
         @Id @GeneratedValue(strategy = GenerationType.AUTO)
         val id: Long?,
-        val name: String,
-        val designed: String?,
-        val year: Int?,
+        val name: String?,
         val version: String?,
-        val web: String?
+        val year: Int,
+        val designed: String,
+        val web: String
 )
 
-fun Language.toEntity(): LanguageEntity = LanguageEntity(id, name, designed, year, version, web)
+fun Language.toEntity(): LanguageEntity = LanguageEntity(id, name, version, year, designed, web)
 
 fun LanguageEntity.toDomain(): Language = Language(
-        id, name, designed, year, version, web
+        id, name, version, year, designed, web, total = null, stars = null, forks = null, watchers = null, openIssues = null
 )

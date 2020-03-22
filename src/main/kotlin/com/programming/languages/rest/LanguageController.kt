@@ -17,24 +17,29 @@ class LanguageController(
 ) {
 
     @PostMapping("/language")
-    fun createLanguage(@RequestBody languageDto: LanguageDto): ResponseEntity<Unit> {
-        createLanguage(languageDto.toDomain())
+    fun createLanguage(@RequestBody languageRequest: LanguageRequest): ResponseEntity<Unit> {
+        createLanguage(languageRequest.toDomain())
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
-    @GetMapping("/language/{languageId}")
-    fun getLanguage(@PathVariable languageId: Long): LanguageDto {
+    @GetMapping("/language/id/{languageId}")
+    fun getLanguageById(@PathVariable languageId: Long): LanguageResponse {
         return getLanguage.getById(languageId).toDto()
     }
 
+    @GetMapping("/language/name/{name}")
+    fun getLanguageByName(@PathVariable name: String): LanguageResponse {
+        return getLanguage.getByName(name).toDto()
+    }
+
     @GetMapping("/language")
-    fun getLanguages(): List<LanguageDto> {
+    fun getLanguages(): List<LanguageResponse> {
         return getLanguage.getAll().map { it.toDto() }
     }
 
     @PutMapping("/language{languageId}")
-    fun updateLanguage(@RequestBody languageDto: LanguageDto, @PathVariable languageId: Long): ResponseEntity<Unit> {
-        updateLanguage(languageDto.toDomain(), languageId)
+    fun updateLanguage(@RequestBody languageRequest: LanguageRequest, @PathVariable languageId: Long): ResponseEntity<Unit> {
+        updateLanguage(languageRequest.toDomain(), languageId)
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
