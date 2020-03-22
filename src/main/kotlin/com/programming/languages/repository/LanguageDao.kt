@@ -22,6 +22,10 @@ class LanguageDao(private val languageRepository: LanguageRepository,
         return languageRepository.findById(id).orElse(null)?.toDomain()
     }
 
+    fun getByName(name: String?): Language? {
+        return languageRepository.findByName(name).orElse(null)?.toDomain()
+    }
+
     fun getAll(): List<Language>? {
        return languageRepository.findAll().map { it.toDomain() }
     }
@@ -30,11 +34,7 @@ class LanguageDao(private val languageRepository: LanguageRepository,
         languageRepository.deleteById(id)
     }
 
-    fun getByName(name: String): Language? {
-        return languageRepository.findByName(name).orElse(null)?.toDomain()
-    }
-
-    fun getByNameFromGithub(name: String): LanguageGithub? {
+    fun getByNameFromGithub(name: String?): LanguageGithub? {
         val query = githubQuery + name
         return githubLanguageRepository.getLanguageData(query)
     }
