@@ -14,12 +14,28 @@ interface GivenLanguage {
                 year = 2013,
                 version = "1.3.61",
                 web = "https://kotlinlang.org",
-                total = null,
-                stars = null,
-                forks = null,
-                watchers = null,
-                openIssues = null
+                total = 1,
+                stars = 2,
+                forks = 3,
+                watchers = 4,
+                openIssues = 5
         )
+
+    val NEW_LANGUAGE
+        get() = Language(
+                id = 2,
+                name = "Java",
+                designed = "James Gosling",
+                year = 1995,
+                version = "Java SE 14",
+                web = "https://openjdk.java.net",
+                total = 6,
+                stars = 7,
+                forks = 8,
+                watchers = 9,
+                openIssues = 10
+        )
+
     val LANGUAGE_ID
         get() = 2
 
