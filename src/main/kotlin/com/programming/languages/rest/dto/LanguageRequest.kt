@@ -1,4 +1,4 @@
-package com.programming.languages.rest
+package com.programming.languages.rest.dto
 
 import com.programming.languages.domain.Language
 

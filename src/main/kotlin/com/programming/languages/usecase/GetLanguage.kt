@@ -2,8 +2,8 @@ package com.programming.languages.usecase
 
 import com.programming.languages.domain.Language
 import com.programming.languages.repository.LanguageDao
-import com.programming.languages.repository.http.toDomain
-import com.programming.languages.repository.http.toEntity
+import com.programming.languages.repository.http.dto.toDomain
+import com.programming.languages.repository.http.dto.toEntity
 import com.programming.languages.usecase.exception.NotFoundException
 import org.springframework.stereotype.Service
 
