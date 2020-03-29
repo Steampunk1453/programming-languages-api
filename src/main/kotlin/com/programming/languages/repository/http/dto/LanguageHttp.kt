@@ -1,4 +1,4 @@
-package com.programming.languages.repository.http
+package com.programming.languages.repository.http.dto
 
 import com.programming.languages.domain.Language
 
