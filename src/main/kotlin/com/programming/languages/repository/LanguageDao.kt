@@ -1,20 +1,31 @@
 package com.programming.languages.repository
 
 import com.programming.languages.domain.Language
-import com.programming.languages.repository.http.ApiLanguageRepository
-import com.programming.languages.repository.http.LanguageGithub
+import com.programming.languages.repository.entity.LanguageEntity
+import com.programming.languages.repository.entity.toDomain
+import com.programming.languages.repository.entity.toDomainOptional
+import com.programming.languages.repository.entity.toEntity
+import com.programming.languages.repository.http.GithubLanguageRepository
+import com.programming.languages.repository.http.dto.LanguageGithub
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
+import java.util.*
+
+@Repository
+interface LanguageRepository : JpaRepository<LanguageEntity, Long> {
+    fun findByName(name: String?): Optional<LanguageEntity>
+}
 
 @Component
 class LanguageDao(private val languageRepository: LanguageRepository,
-                  private val githubLanguageRepository: ApiLanguageRepository
-) {
+                  private val githubLanguageRepository: GithubLanguageRepository) {
 
     @Value("\${github.query}")
     private lateinit var githubQuery: String
 
-    fun save(language: Language): Language {
+    fun create(language: Language): Language {
         return languageRepository.save(language.toEntity()).toDomain()
     }
 
