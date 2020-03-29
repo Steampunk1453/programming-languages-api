@@ -26,26 +26,26 @@ internal class CreateLanguageTest : GivenLanguage {
         val language = LANGUAGE
         val newLanguage = NEW_LANGUAGE
         every { dao.getByName(any()) } returns language
-        every { dao.save(any()) } returns newLanguage
+        every { dao.create(any()) } returns newLanguage
 
         val result = useCase.invoke(NEW_LANGUAGE)
 
         assertThat(result, `is`(not(nullValue())))
-        assertThat(result?.id, `is`(newLanguage.id))
-        assertThat(result?.name, `is`(newLanguage.name))
-        assertThat(result?.designed, `is`(newLanguage.designed))
-        assertThat(result?.year, `is`(newLanguage.year))
-        assertThat(result?.version, `is`(newLanguage.version))
-        assertThat(result?.web, `is`(newLanguage.web))
+        assertThat(result.id, `is`(newLanguage.id))
+        assertThat(result.name, `is`(newLanguage.name))
+        assertThat(result.designed, `is`(newLanguage.designed))
+        assertThat(result.year, `is`(newLanguage.year))
+        assertThat(result.version, `is`(newLanguage.version))
+        assertThat(result.web, `is`(newLanguage.web))
     }
 
     @Test
     fun `should throw AlreadyRegisteredException when create a new language`() {
         val language = LANGUAGE
         every { dao.getByName(any()) } returns language
-        every { dao.save(any()) } returns language
+        every { dao.create(any()) } returns language
 
-        assertThrows<AlreadyRegisteredException> { useCase.invoke(LANGUAGE) }
+        assertThrows<AlreadyRegisteredException> { useCase.invoke(language) }
     }
 
 }
