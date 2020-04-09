@@ -2,15 +2,13 @@ package com.programming.languages.repository
 
 import com.programming.languages.domain.Language
 import com.programming.languages.given.GivenLanguage
+import com.programming.languages.repository.entity.toEntity
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.transaction.annotation.Transactional
 
@@ -22,10 +20,10 @@ class LanguageDaoTest(
 
     @Test
     @DirtiesContext
-    fun `should save language`() {
+    fun `should create language`() {
         val language = LANGUAGE
 
-        val result = save(language)
+        val result = create(language)
 
         result shouldNotBe {null}
         result.id shouldBe language.id
@@ -41,7 +39,7 @@ class LanguageDaoTest(
     fun `should get language by id`() {
         val language = LANGUAGE
         val id = 1L
-        save(language)
+        create(language)
 
         val result = repository.findById(id)
 
@@ -60,7 +58,7 @@ class LanguageDaoTest(
     fun `should get language by name`() {
         val language = LANGUAGE
         val name = "Kotlin"
-        save(language)
+        create(language)
 
         val result = repository.findByName(name)
 
@@ -78,7 +76,7 @@ class LanguageDaoTest(
     @DirtiesContext
     fun `should get all languages`() {
         val language = LANGUAGE
-        save(language)
+        create(language)
 
         val result = repository.findAll()
 
@@ -96,11 +94,10 @@ class LanguageDaoTest(
     fun delete() {
         val language = LANGUAGE
         val id = 1L
-        save(language)
+        create(language)
 
         repository.deleteById(id)
     }
 
-    private fun save(language: Language) =
-            repository.save(language.toEntity())
+    private fun create(language: Language) = repository.save(language.toEntity())
 }

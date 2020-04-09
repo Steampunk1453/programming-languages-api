@@ -25,7 +25,7 @@ internal class UpdateLanguageTest : GivenLanguage {
     fun `should update a language found by id`() {
         val language = LANGUAGE
         every { dao.getById(any()) } returns language
-        every { dao.save(any()) } returns language
+        every { dao.create(any()) } returns language
 
         val result = useCase.invoke(language, 1)
 

@@ -1,6 +1,8 @@
-package com.programming.languages.rest
+package com.programming.languages.rest.errors
 
 import com.programming.languages.usecase.exception.AlreadyRegisteredException
+import com.programming.languages.usecase.exception.EmailAlreadyUsedException
+import com.programming.languages.usecase.exception.LoginAlreadyUsedException
 import com.programming.languages.usecase.exception.NotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,5 +22,13 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(AlreadyRegisteredException::class)
     fun alreadyExists(ex: AlreadyRegisteredException) =
         ResponseEntity(LanguageError(LanguageErrorCode.ALREADY_REGISTERED, ex.message), HttpStatus.CONFLICT)
+
+    @ExceptionHandler(LoginAlreadyUsedException::class)
+    fun loginAlreadyUsed(ex: LoginAlreadyUsedException) =
+            ResponseEntity(LanguageError(LanguageErrorCode.LOGIN_ALREADY_USED, ex.message), HttpStatus.CONFLICT)
+
+    @ExceptionHandler(EmailAlreadyUsedException::class)
+    fun emailAlreadyUsed(ex: EmailAlreadyUsedException) =
+            ResponseEntity(LanguageError(LanguageErrorCode.EMAIL_ALREADY_USED, ex.message), HttpStatus.CONFLICT)
     
 }

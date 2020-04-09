@@ -1,4 +1,4 @@
-package com.programming.languages.repository
+package com.programming.languages.repository.entity
 
 import com.programming.languages.domain.Language
 import javax.persistence.*
@@ -16,7 +16,6 @@ data class LanguageEntity(
 )
 
 fun Language.toEntity(): LanguageEntity = LanguageEntity(id, name, version, year, designed, web)
-
 fun LanguageEntity.toDomain(): Language = Language(
         id, name, version, year, designed, web, total = null, stars = null, forks = null, watchers = null, openIssues = null
 )

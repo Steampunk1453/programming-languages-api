@@ -1,9 +1,9 @@
-package com.programming.languages.rest
+package com.programming.languages.rest.dto
 
 import com.programming.languages.domain.Language
 
 data class LanguageResponse(
-        val id: Long?,
+        val id: String,
         val name: String?,
         val version: String?,
         val year: Int,
@@ -16,5 +16,5 @@ data class LanguageResponse(
         val openIssues: Int?
 )
 
-fun Language.toDto(): LanguageResponse = LanguageResponse(id, name, version, year, designed, web, total, stars, forks, watchers, openIssues)
+fun Language.toDto(): LanguageResponse = LanguageResponse(id.toString(), name, version, year, designed, web, total, stars, forks, watchers, openIssues)
 
