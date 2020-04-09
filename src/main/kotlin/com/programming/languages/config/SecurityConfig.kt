@@ -40,7 +40,6 @@ class SecurityConfig(
     return CRYPT_ENCODER
   }
 
-
   @Bean
   fun authenticationContext(): SetAuthentication = {
     SecurityContextHolder.getContext().authentication = it

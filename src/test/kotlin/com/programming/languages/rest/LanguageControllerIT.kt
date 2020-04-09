@@ -30,7 +30,7 @@ class LanguageControllerIT(
         @Autowired  private val restTemplate: TestRestTemplate,
         @Autowired  private val dao: LanguageDao,
         @Autowired private val repository: UserRepository
-) : GivenLanguage{
+) : GivenLanguage {
 
     @Test
     @DirtiesContext
