@@ -22,7 +22,7 @@ class UserController(
 
   @PostMapping("/register")
   fun registerUser(@RequestBody request: UserRequest): ResponseEntity<UserResponse> {
-    val userResponse = createUser.invoke(request.toDomain(passwordEncoder)).toDto()
+    val userResponse = createUser(request.toDomain(passwordEncoder)).toDto()
     return ResponseEntity(userResponse,HttpStatus.CREATED)
   }
 
