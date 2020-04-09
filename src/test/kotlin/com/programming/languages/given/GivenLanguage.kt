@@ -6,6 +6,7 @@ import com.programming.languages.repository.http.dto.Item
 import com.programming.languages.repository.http.dto.LanguageGithub
 import com.programming.languages.rest.dto.LanguageRequest
 import com.programming.languages.rest.dto.LanguageResponse
+import com.programming.languages.rest.dto.LoginRequest
 import com.programming.languages.rest.dto.UserRequest
 import java.util.*
 
@@ -109,6 +110,19 @@ interface GivenLanguage {
                 username = "username",
                 password = "password",
                 email = "email@gmail.com"
+        )
+
+    val NEW_USER_REQUEST
+        get() = UserRequest(
+                username = "username1",
+                password = "password",
+                email = "email@gmail.com"
+        )
+
+    val LOGIN_REQUEST
+        get() = LoginRequest(
+                username = "username",
+                password = "password"
         )
 
 }
