@@ -27,58 +27,60 @@ typealias SetAuthentication = (Authentication) -> Unit
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig(
-  private val userDetailsService: DomainUserDetailsService,
-  private val tokenProvider: TokenProvider
+        private val userDetailsService: DomainUserDetailsService,
+        private val tokenProvider: TokenProvider,
+        private val corsFilter: CorsFilter
 ) : WebSecurityConfigurerAdapter() {
 
-  companion object {
-    private val CRYPT_ENCODER = BCryptPasswordEncoder()
-  }
+    companion object {
+        private val CRYPT_ENCODER = BCryptPasswordEncoder()
+    }
 
-  @Bean
-  fun passwordEncoder(): PasswordEncoder{
-    return CRYPT_ENCODER
-  }
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return CRYPT_ENCODER
+    }
 
-  @Bean
-  fun authenticationContext(): SetAuthentication = {
-    SecurityContextHolder.getContext().authentication = it
-  }
+    @Bean
+    fun authenticationContext(): SetAuthentication = {
+        SecurityContextHolder.getContext().authentication = it
+    }
 
-  @Bean(name = [(BeanIds.AUTHENTICATION_MANAGER)])
-  override fun authenticationManagerBean(): AuthenticationManager {
-    return super.authenticationManagerBean()
-  }
+    @Bean(name = [(BeanIds.AUTHENTICATION_MANAGER)])
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
+    }
 
-  @Autowired
-  fun configureGlobal(auth: AuthenticationManagerBuilder) {
-    auth.userDetailsService(userDetailsService)
-      .passwordEncoder(CRYPT_ENCODER)
-  }
+    @Autowired
+    fun configureGlobal(auth: AuthenticationManagerBuilder) {
+        auth.userDetailsService(userDetailsService)
+                .passwordEncoder(CRYPT_ENCODER)
+    }
 
-  override fun configure(http: HttpSecurity) {
-    http
-      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-      .authorizeRequests()
-      .antMatchers("/user/**").permitAll()
-      .antMatchers("/v2/api-docs").permitAll()
-      .antMatchers("/swagger-resources/**").permitAll()
-      .antMatchers("/swagger-ui.html**").permitAll()
-      .antMatchers("/webjars/**").permitAll()
-      .antMatchers("/h2-console/**").permitAll()
-      .antMatchers("/actuator/**").permitAll()
-      .anyRequest().authenticated()
-      .and()
-      .headers().frameOptions().sameOrigin()
-      .and()
-      .addFilterBefore(
-        TokenAuthenticationFilter(tokenProvider, userDetailsService, authenticationContext()),
-        UsernamePasswordAuthenticationFilter::class.java
-      )
-      .csrf().disable()
-      .formLogin().disable()
-      .httpBasic().disable()
-      .exceptionHandling()
-      .authenticationEntryPoint(JwtAuthenticationEntryPoint())
-  }
+    override fun configure(http: HttpSecurity) {
+        http
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeRequests()
+                .antMatchers("/user/**").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/swagger-ui.html**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .headers().frameOptions().sameOrigin()
+                .and()
+                .addFilterBefore(TokenAuthenticationFilter(tokenProvider, userDetailsService, authenticationContext()),
+                        UsernamePasswordAuthenticationFilter::class.java)
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter::class.java)
+                .csrf()
+                .disable()
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter::class.java)
+                .formLogin().disable()
+                .httpBasic().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(JwtAuthenticationEntryPoint())
+    }
 }
