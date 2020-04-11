@@ -27,8 +27,10 @@ class UserController(
   }
 
   @PostMapping("/login")
-  fun loginUser(@RequestBody request: LoginRequest): String {
+  fun loginUser(@RequestBody request: LoginRequest): ResponseEntity<LoginResponse>  {
     val userPass = UsernamePasswordAuthenticationToken(request.username, request.password)
-    return loginUser(userPass)
+    val token = loginUser(userPass)
+    val loginResponse = LoginResponse(request.username, token)
+    return ResponseEntity(loginResponse,HttpStatus.OK)
   }
 }
