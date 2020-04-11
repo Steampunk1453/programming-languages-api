@@ -13,7 +13,7 @@ class CreateUser(private val userDao: UserDao) {
         if (userDao.getByUsername(user.username.toLowerCase()).isPresent) {
             throw LoginAlreadyUsedException("User ${user.username} already in use")
         } else if (userDao.getByEmail(user.email.toLowerCase()).isPresent) {
-            throw EmailAlreadyUsedException("User ${user.email} already in use")
+            throw EmailAlreadyUsedException("Email ${user.email} already in use")
         }
         return userDao.create(user)
     }
