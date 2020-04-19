@@ -23,8 +23,8 @@ class GetLanguage(private val languageDao: LanguageDao) {
     fun getAll(): List<Language> {
         val languages = mutableListOf<Language>()
         val databaseLanguages = languageDao.getAll() ?: throw NotFoundException("No languages in DB")
-        for (l in databaseLanguages) {
-            val language = completeLanguageData(l)
+        for (lang in databaseLanguages) {
+            val language = completeLanguageData(lang)
             languages.add(language)
         }
         return languages
