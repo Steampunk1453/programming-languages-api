@@ -262,7 +262,7 @@ class LanguageControllerIT(
                 param
         )
 
-        response.statusCode shouldBe HttpStatus.NO_CONTENT
+        response.statusCode shouldBe HttpStatus.CREATED
     }
 
     @Test
