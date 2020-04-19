@@ -6,10 +6,9 @@ data class LanguageRequest(
         val name: String?,
         val version: String?,
         val year: Int,
-        val designed: String,
-        val web: String
+        val designed: String
 )
 
-fun LanguageRequest.toDomain(): Language = Language(name = name, version = version, year = year, designed = designed,
-        web = web, total = null, stars = null, forks = null, watchers = null, openIssues = null
+fun LanguageRequest.toDomain(): Language = Language(name = name, designed = designed, year = year, version = version,
+       total = null, stars = null, forks = null, watchers = null, openIssues = null
 )

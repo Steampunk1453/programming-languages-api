@@ -19,7 +19,6 @@ interface GivenLanguage {
                 designed = "JetBrains",
                 year = 2013,
                 version = "1.3.61",
-                web = "https://kotlinlang.org",
                 total = 1,
                 stars = 2,
                 forks = 3,
@@ -35,7 +34,6 @@ interface GivenLanguage {
                 designed = "James Gosling",
                 year = 1995,
                 version = "Java SE 14",
-                web = "https://openjdk.java.net",
                 total = 6,
                 stars = 7,
                 forks = 8,
@@ -46,10 +44,9 @@ interface GivenLanguage {
     val LANGUAGE_REQUEST
         get() = LanguageRequest(
                 name = "Kotlin",
-                version = "1.3.61",
-                year = 2013,
                 designed = "JetBrains",
-                web = "https://kotlinlang.org"
+                year = 2013,
+                version = "1.3.61"
         )
 
     val NEW_LANGUAGE_REQUEST
@@ -57,8 +54,7 @@ interface GivenLanguage {
                 name = "Java",
                 designed = "James Gosling",
                 year = 1995,
-                version = "Java SE 14",
-                web = "https://openjdk.java.net"
+                version = "Java SE 14"
         )
 
     val LANGUAGE_RESPONSE
@@ -68,7 +64,6 @@ interface GivenLanguage {
                 designed = "JetBrains",
                 year = 2013,
                 version = "1.3.61",
-                web = "https://kotlinlang.org",
                 total = 1,
                 stars = 2,
                 forks = 3,

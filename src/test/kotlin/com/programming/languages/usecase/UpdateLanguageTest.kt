@@ -35,7 +35,6 @@ internal class UpdateLanguageTest : GivenLanguage {
         MatcherAssert.assertThat(result.designed, Matchers.`is`(language.designed))
         MatcherAssert.assertThat(result.year, Matchers.`is`(language.year))
         MatcherAssert.assertThat(result.version, Matchers.`is`(language.version))
-        MatcherAssert.assertThat(result.web, Matchers.`is`(language.web))
     }
 
     @Test

@@ -36,7 +36,6 @@ internal class CreateLanguageTest : GivenLanguage {
         assertThat(result.designed, `is`(newLanguage.designed))
         assertThat(result.year, `is`(newLanguage.year))
         assertThat(result.version, `is`(newLanguage.version))
-        assertThat(result.web, `is`(newLanguage.web))
     }
 
     @Test

@@ -31,7 +31,6 @@ class LanguageDaoTest(
         result.designed shouldBe language.designed
         result.year shouldBe language.year
         result.version shouldBe language.version
-        result.web shouldBe language.web
     }
 
     @Test
@@ -50,7 +49,6 @@ class LanguageDaoTest(
         result.get().designed shouldBe language.designed
         result.get().year shouldBe language.year
         result.get().version shouldBe language.version
-        result.get().web shouldBe language.web
     }
 
     @Test
@@ -69,7 +67,6 @@ class LanguageDaoTest(
         result.get().designed shouldBe language.designed
         result.get().year shouldBe language.year
         result.get().version shouldBe language.version
-        result.get().web shouldBe language.web
     }
 
     @Test
@@ -86,7 +83,6 @@ class LanguageDaoTest(
         result[0].designed shouldBe language.designed
         result[0].year shouldBe language.year
         result[0].version shouldBe language.version
-        result[0].web shouldBe language.web
     }
 
     @Test
