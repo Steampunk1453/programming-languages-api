@@ -3,7 +3,6 @@ package com.programming.languages.repository
 import com.programming.languages.domain.Language
 import com.programming.languages.repository.entity.LanguageEntity
 import com.programming.languages.repository.entity.toDomain
-import com.programming.languages.repository.entity.toDomainOptional
 import com.programming.languages.repository.entity.toEntity
 import com.programming.languages.repository.http.GithubLanguageRepository
 import com.programming.languages.repository.http.dto.LanguageGithub

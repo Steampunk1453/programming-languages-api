@@ -2,8 +2,6 @@ package com.programming.languages.usecase
 
 import com.programming.languages.domain.Language
 import com.programming.languages.repository.LanguageDao
-import com.programming.languages.rest.dto.LanguageResponse
-import com.programming.languages.rest.dto.toDto
 import com.programming.languages.usecase.exception.AlreadyRegisteredException
 import org.springframework.stereotype.Service
 
