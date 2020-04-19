@@ -4,6 +4,7 @@ import com.programming.languages.domain.Language
 import com.programming.languages.domain.User
 import com.programming.languages.given.GivenLanguage
 import com.programming.languages.repository.LanguageDao
+import com.programming.languages.repository.LanguageRepository
 import com.programming.languages.repository.UserRepository
 import com.programming.languages.repository.entity.toEntity
 import com.programming.languages.rest.dto.LanguageResponse
@@ -24,12 +25,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
+
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LanguageControllerIT(
         @Autowired  private val restTemplate: TestRestTemplate,
         @Autowired  private val dao: LanguageDao,
-        @Autowired private val repository: UserRepository
+        @Autowired private val userRepository: UserRepository,
+        @Autowired private val languageRepository: LanguageRepository
 ) : GivenLanguage {
 
     @Test
@@ -42,6 +45,7 @@ class LanguageControllerIT(
         headers.set(HttpHeaders.AUTHORIZATION, "Bearer ${getTokenForTestUser()}")
         val entity = HttpEntity(languageRequest, headers)
         create(user)
+        deleteLanguages()
 
         val response = restTemplate.exchange(
                 "/language",
@@ -54,7 +58,6 @@ class LanguageControllerIT(
         response.body?.designed shouldBe languageResponse.designed
         response.body?.name shouldBe languageResponse.name
         response.body?.version shouldBe languageResponse.version
-        response.body?.web shouldBe languageResponse.web
         response.body?.year shouldBe languageResponse.year
     }
 
@@ -104,8 +107,8 @@ class LanguageControllerIT(
     @DirtiesContext
     fun `GET should get a language by id`() {
         val user = USER
-        val languageId = 2
         val language = LANGUAGE
+        val languageId = LANGUAGE.id
         val languageResponse = LANGUAGE_RESPONSE
         val headers = HttpHeaders()
         headers.set(HttpHeaders.AUTHORIZATION, "Bearer ${getTokenForTestUser()}")
@@ -121,10 +124,9 @@ class LanguageControllerIT(
         )
 
         response.statusCode shouldBe HttpStatus.OK
-        response.body?.designed shouldBe languageResponse.designed
         response.body?.name shouldBe languageResponse.name
+        response.body?.designed shouldBe languageResponse.designed
         response.body?.version shouldBe languageResponse.version
-        response.body?.web shouldBe languageResponse.web
         response.body?.total shouldNotBe null
         response.body?.stars shouldNotBe null
         response.body?.forks shouldNotBe null
@@ -178,7 +180,6 @@ class LanguageControllerIT(
         response.body?.designed shouldBe languageResponse.designed
         response.body?.name shouldBe languageResponse.name
         response.body?.version shouldBe languageResponse.version
-        response.body?.web shouldBe languageResponse.web
         response.body?.year shouldBe languageResponse.year
         response.body?.total shouldNotBe null
         response.body?.stars shouldNotBe null
@@ -230,7 +231,6 @@ class LanguageControllerIT(
         response.body?.get(0)?.designed shouldBe language.designed
         response.body?.get(0)?.name shouldBe language.name
         response.body?.get(0)?.version shouldBe language.version
-        response.body?.get(0)?.web shouldBe language.web
         response.body?.get(0)?.year shouldBe language.year
         response.body?.get(0)?.total shouldNotBe null
         response.body?.get(0)?.stars shouldNotBe null
@@ -244,7 +244,7 @@ class LanguageControllerIT(
     fun `PUT should update a language by id`() {
         val user = USER
         val language = LANGUAGE
-        val languageId = 2
+        val languageId = NEW_LANGUAGE.id
         val newLanguageRequest = NEW_LANGUAGE_REQUEST
         val headers = HttpHeaders()
         headers.set(HttpHeaders.AUTHORIZATION, "Bearer ${getTokenForTestUser()}")
@@ -289,8 +289,9 @@ class LanguageControllerIT(
 
     private class LanguageList : MutableList<Language> by ArrayList()
 
-    private fun create(language: Language) = dao.create(language)
+    private fun create(user: User) = userRepository.save(user.toEntity())
     private fun getTokenForTestUser(): String = TokenProvider().generateToken("username")
-    private fun create(user: User) = repository.save(user.toEntity())
+    private fun create(language: Language) = dao.create(language)
+    private fun deleteLanguages() = languageRepository.deleteAll()
 }
 
