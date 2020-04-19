@@ -5,8 +5,8 @@ import com.programming.languages.rest.dto.LanguageResponse
 import com.programming.languages.rest.dto.toDomain
 import com.programming.languages.rest.dto.toDto
 import com.programming.languages.usecase.CreateLanguage
-import com.programming.languages.usecase.RemoveLanguage
 import com.programming.languages.usecase.GetLanguage
+import com.programming.languages.usecase.RemoveLanguage
 import com.programming.languages.usecase.UpdateLanguage
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -43,9 +43,9 @@ class LanguageController(
     }
 
     @PutMapping("/{languageId}")
-    fun updateLanguage(@RequestBody languageRequest: LanguageRequest, @PathVariable languageId: Long): ResponseEntity<Unit> {
-        updateLanguage(languageRequest.toDomain(), languageId)
-        return ResponseEntity(HttpStatus.NO_CONTENT)
+    fun updateLanguage(@RequestBody languageRequest: LanguageRequest, @PathVariable languageId: Long): ResponseEntity<LanguageResponse> {
+        val languageResponse = updateLanguage(languageRequest.toDomain(), languageId).toDto()
+        return ResponseEntity(languageResponse, HttpStatus.CREATED)
     }
 
     @DeleteMapping("/{languageId}")
